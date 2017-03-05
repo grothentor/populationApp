@@ -1,0 +1,29 @@
+{
+  "name": "PopulationApp",
+  "description": "app for calculate population",
+  "main": "app/app.js",
+  "keywords": [
+    "population",
+    "angular"
+  ],
+  "authors": [
+    "Alexandr Afanasiev@grothentor"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app\\vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.2",
+    "bootstrap": "^3.3.7",
+    "chart.js": "^2.5.0",
+    "angular-chart.js": "^1.1.1"
+  }
+}

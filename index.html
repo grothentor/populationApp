@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Популяция</title>
+    <link rel="stylesheet" href="/app/vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="jumbotron text-center">
+        <h2>Вычисление популяции</h2>
+    </header>
+
+    <div class="container" ng-app="populationApp">
+        <div class="row" ng-controller="populationCtrl">
+            <form name="populationForm">
+                <div class="col-sm-6 data-holder">
+                    {{populationForm.basicPopulation.$valid}}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="basic-population" class="text-right pull-right">Начальная популяция:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="basicPopulation" class="form-control col-sm-6" id="basic-population" number-directive>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="population-increase" class="text-right pull-right">Прирост популяции:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="populationIncrease" class="form-control" id="population-increase" number-directive>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 data-holder" ng-show="populationForm.basicPopulation.$valid && populationForm.populationIncrease.$valid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="target-population" class="text-right pull-right">Целевое значение популяции:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="targetPopulation" class="form-control col-sm-6" id="target-population">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="population-range-start" class="text-right pull-right">Промежуток времени отслеживания популяции:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="col-sm-5">
+                                <input type="text" ng-model="populationRange.start" class="form-control" id="population-range-start">
+                            </div>
+                            <div class="col-sm-2 text-center">-</div>
+                            <div class="col-sm-5">
+                                <input type="text" ng-model="populationRange.end" class="form-control" id="population-range-end">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="col-sm-12 graph-holder"  ng-controller="graphCtrl">
+                graph
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center text-muted">
+            Афанасьев Александр, 2017 г.
+        </div>
+    </footer>
+    <script src="app/vendor/angular/angular.min.js"></script>
+    <script src="app/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="app/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="app/vendor/chart.js/dist/Chart.js"></script>
+    <script src="app/vendor/angular-chart.js/angular-chart.js"></script>
+    <script src="app/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+}
+.data-holder > div + div {
+    margin-top: 10px;
+}
+.data-holder div {
+    padding-left: 5px;
+    padding-right: 5px;
+}
