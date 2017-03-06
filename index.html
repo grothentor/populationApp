@@ -8,58 +8,132 @@
 </head>
 <body>
     <header class="jumbotron text-center">
-        <h2>Вычисление популяции</h2>
+        <h2>Вычисление популяции, <b>P = P<sub>0</sub>e<sup>kt</sup></b></h2>
     </header>
 
     <div class="container" ng-app="populationApp">
-        <div class="row" ng-controller="populationCtrl">
-            <form name="populationForm">
-                <div class="col-sm-6 data-holder">
-                    {{populationForm.basicPopulation.$valid}}
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label for="basic-population" class="text-right pull-right">Начальная популяция:</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="basicPopulation" class="form-control col-sm-6" id="basic-population" number-directive>
-                        </div>
+        <div class="row" ng-form name="populationForm" ng-controller="populationCtrl">
+            <div class="errors">
+                <div class="alert alert-warning"
+                     ng-show="populationForm.basicPopulation.$invalid || populationForm.populationIncrease.$invalid">
+                    Начальная популяция и прирощение популяции должны быть числами.
+                </div>
+                <div class="alert alert-warning"
+                     ng-show="populationForm.targetPopulation.$invalid &&
+                        (populationForm.populationStart.$invalid ||
+                        populationForm.populationEnd.$invalid)">
+                    Для решения задачи необходимо чтобы целевое значение или время было задано числами.
+                </div>
+                <div class="alert alert-warning"
+                     ng-show="populationForm.populationStart.$valid &&
+                        populationForm.populationEnd.$valid &&
+                        population.range.start > population.range.end">
+                    Начало временного промежутка должно быть больше его конца.
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="alert alert-info">
+                    Для получения решения необходимо задать корректные значения для начальной популяции, прироста популяции.
+                    За тем необходимо указать необходимое целевое значение популяции или(и) промежуток времени, на котором будет
+                    отслеживаться популяций. При введении корректнного целевого значения популяции будет отображено через
+                    какое время будет достигнута такая популяция. При указании промежутка времени будет отображен график с
+                    изминением числа популяции на нем.
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 data-holder">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="basic-population" class="text-right pull-right">Начальная популяция:</label>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label for="population-increase" class="text-right pull-right">Прирост популяции:</label>
+                    <div class="col-xs-6">
+                        <input type="text" ng-model="population.basic" name="basicPopulation" class="form-control col-md-6"
+                               id="basic-population" number-directive>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="population-increase" class="text-right pull-right">Прирост популяции:</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" ng-model="population.increase" name="populationIncrease" class="form-control"
+                               id="population-increase" number-directive>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 data-holder"
+                 ng-show="populationForm.basicPopulation.$valid && populationForm.populationIncrease.$valid">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="target-population" class="text-right pull-right">Целевое значение популяции:</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" ng-model="population.target" name="targetPopulation" class="form-control col-md-6"
+                               id="target-population" number-directive>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="population-range-start" class="text-right pull-right">
+                            Промежуток времени:
+                        </label>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="col-xs-5">
+                            <input type="text" ng-model="population.range.start" name="populationStart" class="form-control"
+                                   id="population-range-start" number-directive>
                         </div>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="populationIncrease" class="form-control" id="population-increase" number-directive>
+                        <div class="col-xs-2 text-center">-</div>
+                        <div class="col-xs-5">
+                            <input type="text" ng-model="population.range.end" name="populationEnd" class="form-control"
+                                   id="population-range-end" number-directive>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 data-holder" ng-show="populationForm.basicPopulation.$valid && populationForm.populationIncrease.$valid">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label for="target-population" class="text-right pull-right">Целевое значение популяции:</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="targetPopulation" class="form-control col-sm-6" id="target-population">
-                        </div>
+            </div>
+            <div class="col-xs-12 text-center">
+                <button class="btn btn-primary" ng-click="calculate()"
+                        ng-disabled="
+                        !(populationForm.basicPopulation.$valid &&
+                        populationForm.populationIncrease.$valid &&
+                        (populationForm.targetPopulation.$valid ||
+                            (populationForm.populationStart.$valid &&
+                                populationForm.populationEnd.$valid &&
+                                population.range.start < population.range.end)))">
+                    Подсчитать
+                </button>
+            </div>
+        </div>
+        <div class="row result-holder"  ng-controller="graphCtrl">
+            <div class="container-fluid result-content">
+                <div ng-show="population.calculatePopulation" class="col-md-6 col-xs-12">
+                    <div class="row text-center">
+                        Популяция в {{ population.targetFixed | numeric : 'особ' : 'ь' : 'и' : 'ей' }} будет достигнута за
+                        {{ population.targetTime | numeric : '' : 'год' : 'года' : 'лет' }}
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
-                            <label for="population-range-start" class="text-right pull-right">Промежуток времени отслеживания популяции:</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="col-sm-5">
-                                <input type="text" ng-model="populationRange.start" class="form-control" id="population-range-start">
-                            </div>
-                            <div class="col-sm-2 text-center">-</div>
-                            <div class="col-sm-5">
-                                <input type="text" ng-model="populationRange.end" class="form-control" id="population-range-end">
-                            </div>
-                        </div>
+                        <canvas id="target-graph" class="chart chart-line" chart-data="population.targetData.data"
+                                chart-labels="population.targetData.labels" chart-series="series" chart-options="options"
+                                chart-dataset-override="datasetOverride" chart-click="onClick">
+                        </canvas>
                     </div>
                 </div>
-            </form>
-            <div class="col-sm-12 graph-holder"  ng-controller="graphCtrl">
-                graph
+                <div ng-show="population.calculateRange" class="col-md-6 col-xs-12">
+                    <div class="row">
+                        Популяция на промежутке [{{ population.rangeFixed.start }}; {{ population.rangeFixed.end }}]:
+                    </div>
+                    <div class="row">
+                        <canvas id="range-graph" class="chart chart-line" chart-data="population.rangeData.data"
+                                chart-labels="population.rangeData.labels" chart-series="series" chart-options="options"
+                                chart-dataset-override="datasetOverride" chart-click="onClick">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-{{ population.calculateRange && population.calculatePopulation ? 12 : 6 }} col-xs-12 text-center">
+                <button class="btn btn-primary" ng-click="saveToPdf($event)"
+                        ng-show="population.calculateRange || population.calculatePopulation">
+                    Сформировать отчет
+                </button>
             </div>
         </div>
     </div>
@@ -74,6 +148,7 @@
     <script src="app/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="app/vendor/chart.js/dist/Chart.js"></script>
     <script src="app/vendor/angular-chart.js/angular-chart.js"></script>
+    <script src="app/vendor/jspdf/dist/jspdf.min.js"></script>
     <script src="app/app.js"></script>
 </body>
 </html>
