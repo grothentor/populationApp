@@ -1,3 +1,4 @@
 app/vendor
 .idea
 node_modules/
+build/

@@ -1,0 +1,32 @@
+{
+  "name": "population-app",
+  "version": "0.0.2",
+  "dependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1",
+    "gulp-rigger": "^0.5.8",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-uglify": "^2.1.0",
+    "gulp-watch": "^4.3.11",
+    "serve-static": "^1.12.1"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "description": "modeling system lab",
+  "main": "/app/app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grothentor/populationApp.git"
+  },
+  "keywords": [
+    "population"
+  ],
+  "author": "Alexandr Afanasiev @grothentor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grothentor/populationApp/issues"
+  },
+  "homepage": "https://github.com/grothentor/populationApp#readme"
+}
