@@ -7,6 +7,8 @@
 var gulp = require('gulp'),
     watch = require('gulp-watch'),
     uglify = require('gulp-uglify'),
+    sass = require('gulp-sass'),
+    cssmin = require('gulp-minify-css'),
     rigger = require('gulp-rigger'),
     sourcemaps = require('gulp-sourcemaps'),
     browserSync = require('browser-sync'),
@@ -14,29 +16,47 @@ var gulp = require('gulp'),
 
 var path = {
     build: {
-        js: 'build/js/'
+        js: 'public/js/', 
+        style: 'public/css/'
     },
     src: {
-        js: 'app/app.js'
+        js: 'app/app.js',
+        style: 'css/style.scss'
     },
     watch: { 
-        js: 'app/**/*.js'
+        js: 'app/**/*.js',
+        style: 'css/*.css'
     }
 };
 
 gulp.task('js:build', function () {
-    gulp.src(path.src.js) //Найдем наш main файл
-        .pipe(rigger()) //Прогоним через rigger
-        .pipe(sourcemaps.init()) //Инициализируем sourcemap
-        .pipe(sourcemaps.write()) //Пропишем карты
-        .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
-        .pipe(reload({stream: true})); //И перезагрузим сервер
+    gulp.src(path.src.js)
+        .pipe(rigger())
+        .pipe(sourcemaps.init())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(path.build.js))
+        .pipe(reload({stream: true}));
+});
+
+gulp.task('style:build', function () {
+    gulp.src(path.src.style)
+        .pipe(sourcemaps.init())
+        .pipe(sourcemaps.write())
+        .pipe(sass())
+        .pipe(cssmin())
+        .pipe(gulp.dest(path.build.style))
+        .pipe(reload({stream: true}));
 });
 
 gulp.task('watch', function(){
     watch([path.watch.js], function(event, cb) {
         gulp.start('js:build');
     });
+    watch([path.watch.style], function(event, cb) {
+        gulp.start('style:build');
+    });
 });
 
-gulp.task('default', ['js:build', 'watch']);
+gulp.task('build', ['js:build', 'style:build'])
+
+gulp.task('default', ['build', 'watch']);
