@@ -23,14 +23,16 @@
                 end: 100
             };
             this.targetFixed = 1000;
+            this.basicFixed = 100;
+            this.increaseFixed = 0.01;
 
             var labelsCount = 20;
             this.calculateByTarget = function () {
+                this.fixData();
                 this.targetData = {
                     labels: [0],
                     data: [[this.basic]]
                 };
-                this.targetFixed = this.target;
                 this.targetTime = Math.log(this.target / this.basic) / this.increase;
                 this.targetData[this.targetTime] = this.target;
 
@@ -49,10 +51,7 @@
             };
 
             this.calculateByRange = function () {
-                this.rangeFixed = {
-                    start: this.range.start,
-                    end: this.range.end
-                };
+                this.fixData();
                 this.rangeData = {
                     labels: [],
                     data: [[]]
@@ -81,6 +80,16 @@
 
             this.getPopulation = function (time) {
                 return Math.round(this.basic * Math.exp(time * this.increase));
+            };
+
+            this.fixData = function () {
+                this.targetFixed = this.target;
+                this.basicFixed = this.basic;
+                this.increaseFixed = this.increase;
+                this.rangeFixed = {
+                    start: this.range.start,
+                    end: this.range.end
+                };
             };
 
             return this;
