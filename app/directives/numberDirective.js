@@ -9,7 +9,7 @@
             require: 'ngModel',
             link: function ($scope, element, attr, mCtrl) {
                 function numberValidation(value) {
-                    var valueValidation = checkNumberValidation(value, $(element).attr('number-directive'));
+                    var valueValidation = checkNumberValidation(value, attr.numberDirective);
                     mCtrl.$setValidity('number', valueValidation);
                     return valueValidation ? parseFloat(value) : value;
                 }
