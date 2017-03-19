@@ -30,21 +30,25 @@
             this.calculateByTarget = function () {
                 this.fixData();
                 this.targetData = {
-                    labels: [0],
-                    data: [[this.basic]]
+                    labels: [],
+                    data: [[]]
                 };
                 this.targetTime = Math.log(this.target / this.basic) / this.increase;
                 this.targetData[this.targetTime] = this.target;
 
                 var step = Math.round(this.targetTime / labelsCount);
+                if (0 > step) step = Math.abs(step);
                 if (1 > step) step = 1;
 
-                for (var i = step; i < this.targetTime; i += step) {
-                    if (i + step > this.targetTime) {
-                        this.targetData.labels.push(Math.round(this.targetTime));
-                        this.targetData.data[0].push(this.target);
+                var start =  this.targetTime > 0 ? 0 : this.targetTime;
+                var end = this.targetTime > 0 ? this.targetTime : 0;
+
+                for (var i = start; i < end; i += step) {
+                    if (i + step > end) {
+                        this.targetData.labels.push(Math.round(end));
+                        this.targetData.data[0].push(this.getPopulation(end));
                     } else {
-                        this.targetData.labels.push(i);
+                        this.targetData.labels.push(Math.round(i));
                         this.targetData.data[0].push(this.getPopulation(i));
                     }
                 }
@@ -69,9 +73,9 @@
             };
 
             this.checkFieldsValidation = function () {
-                if (checkNumberValidation(this.basic) &&
+                if (checkNumberValidation(this.basic, 'int-positive') &&
                     checkNumberValidation(this.increase)) {
-                    this.calculatePopulation = checkNumberValidation(this.target);
+                    this.calculatePopulation = checkNumberValidation(this.target, 'int-positive');
                     this.calculateRange = checkNumberValidation(this.range.end) &&
                         checkNumberValidation(this.range.start) &&
                         this.range.start < this.range.end;
@@ -79,7 +83,8 @@
             };
 
             this.getPopulation = function (time) {
-                return Math.round(this.basic * Math.exp(time * this.increase));
+                var population = Math.round(this.basic * Math.exp(time * this.increase));
+                return population > 0 ? population : 0;
             };
 
             this.fixData = function () {

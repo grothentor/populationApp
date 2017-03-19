@@ -15,25 +15,27 @@
             <div class="errors">
                 <div class="alert alert-warning"
                      ng-show="populationForm.basicPopulation.$invalid || populationForm.populationIncrease.$invalid">
-                    Начальная популяция и прирощение популяции должны быть числами.
+                    Начальная популяция должна быть положительным целым числом,
+                    а прирощение популяции должно быть числом.
                 </div>
                 <div class="alert alert-warning"
-                     ng-show="populationForm.targetPopulation.$invalid &&
+                     ng-show="populationForm.basicPopulation.$valid && populationForm.populationIncrease.$valid &&
+                        (populationForm.targetPopulation.$invalid &&
                         (populationForm.populationStart.$invalid ||
-                        populationForm.populationEnd.$invalid)">
+                        populationForm.populationEnd.$invalid))">
                     Для решения задачи необходимо чтобы целевое значение или время было задано числами.
                 </div>
                 <div class="alert alert-warning"
                      ng-show="populationForm.populationStart.$valid &&
                         populationForm.populationEnd.$valid &&
                         population.range.start > population.range.end">
-                    Начало временного промежутка должно быть больше его конца.
+                    Начало временного промежутка должно быть меньше его конца.
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="alert alert-info">
                     Для получения решения необходимо задать корректные значения для начальной популяции, прироста популяции.
-                    За тем необходимо указать необходимое целевое значение популяции или(и) промежуток времени, на котором будет
+                    Затем необходимо указать необходимое целевое значение популяции или(и) промежуток времени, на котором будет
                     отслеживаться популяций. При введении корректнного целевого значения популяции будет отображено через
                     какое время будет достигнута такая популяция. При указании промежутка времени будет отображен график с
                     изминением числа популяции на нем.
@@ -46,7 +48,7 @@
                     </div>
                     <div class="col-xs-6">
                         <input type="text" ng-model="population.basic" name="basicPopulation" class="form-control col-md-6"
-                               id="basic-population" number-directive>
+                               id="basic-population" number-directive="int-positive">
                     </div>
                 </div>
                 <div class="row">
@@ -67,7 +69,7 @@
                     </div>
                     <div class="col-xs-6">
                         <input type="text" ng-model="population.target" name="targetPopulation" class="form-control col-md-6"
-                               id="target-population" number-directive>
+                               id="target-population" number-directive="int-positive">
                     </div>
                 </div>
                 <div class="row">
@@ -106,8 +108,14 @@
             <div class="container-fluid result-content">
                 <div ng-show="population.calculatePopulation" class="col-md-6 col-xs-12">
                     <div class="row text-center">
-                        Популяция в {{ population.targetFixed | numeric : 'особ' : 'ь' : 'и' : 'ей' }} будет достигнута за
-                        {{ population.targetTime | numeric : '' : 'год' : 'года' : 'лет' }}
+                        <span ng-if="population.targetTime > 0">
+                            Популяция в {{ population.targetFixed | numeric : 'особ' : 'ь' : 'и' : 'ей' }} будет достигнута за
+                            {{ population.targetTime | numeric : '' : 'год' : 'года' : 'лет' }}
+                        </span>
+                        <span ng-if="population.targetTime < 0">
+                            Популяция в {{population.targetFixed | numeric : 'особ' : 'ь' : 'и' : 'ей' }} была
+                            {{ -1 * population.targetTime | numeric : '' : 'год' : 'года' : 'лет' }} назад
+                        </span>
                     </div>
                     <div class="row">
                         <canvas id="target-graph" class="chart chart-line" chart-data="population.targetData.data"

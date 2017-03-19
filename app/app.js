@@ -12,8 +12,13 @@
 //= vendor/angular-chart.js/angular-chart.js
 //= vendor/jspdf/dist/jspdf.min.js
 
-function checkNumberValidation(value) {
-    return /^\d+(\.\d+)?$/.test(value);
+function checkNumberValidation(value, variant) {
+    switch (variant) {
+        case 'positive': return /^\d+(\.\d+)?$/.test(value);
+        case 'int': return /^-?\d+$/.test(value);
+        case 'int-positive': return /^\d+$/.test(value);
+        default: return /^-?\d+(\.\d+)?$/.test(value);
+    }
 }
 
 function getWordEndingVariant(count) {

@@ -15,7 +15,7 @@
                         phrase = word;
                     } else words = {1: word, 2: one, 5: two};
                 else phrase = word;
-            input = Math.round(parseFloat(input) * 100) / 100;
+            input = Math.round(parseFloat(input));
             return input + ' ' + getWordWithEnding(phrase, input, words)
         }
     })
