@@ -8,21 +8,22 @@
 //= vendor/angular/angular.min.js
 //= vendor/jquery/dist/jquery.min.js
 //= vendor/bootstrap/dist/js/bootstrap.min.js
-//= vendor/chart.js/dist/Chart.js
-//= vendor/angular-chart.js/angular-chart.js
+//= vendor/chart.js/dist/Chart.min.js
+//= vendor/angular-chart.js/dist/angular-chart.min.js
 //= vendor/jspdf/dist/jspdf.min.js
 
 function checkNumberValidation(value, variant) {
     switch (variant) {
-        case 'positive': return /^\d+(\.\d+)?$/.test(value);
+        case 'positive': return /^\d+(\.\d+)?$/.test(value) && 0 < parseInt(value);
         case 'int': return /^-?\d+$/.test(value);
-        case 'int-positive': return /^\d+$/.test(value);
+        case 'int-positive': return /^\d+$/.test(value) && 0 < parseInt(value);
         default: return /^-?\d+(\.\d+)?$/.test(value);
     }
 }
 
 function getWordEndingVariant(count) {
     if ('string' == typeof(count)) count = parseFloat(count);
+    if (count < 0) count *= -1;
     if (count % 1) return 2;
     count = count % 100;
     var decade = ~~(count / 10);

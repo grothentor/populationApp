@@ -20,10 +20,13 @@
                 </div>
                 <div class="alert alert-warning"
                      ng-show="populationForm.basicPopulation.$valid && populationForm.populationIncrease.$valid &&
-                        (populationForm.targetPopulation.$invalid &&
-                        (populationForm.populationStart.$invalid ||
-                        populationForm.populationEnd.$invalid))">
-                    Для решения задачи необходимо чтобы целевое значение или время было задано числами.
+                        populationForm.targetPopulation.$invalid">
+                    Для поиска времени достижения попляции необходимо чтобы целевое значение было задано положительным числом.
+                </div>
+                <div class="alert alert-warning"
+                     ng-show="populationForm.basicPopulation.$valid && populationForm.populationIncrease.$valid &&
+                        (populationForm.populationStart.$invalid || populationForm.populationEnd.$invalid)">
+                    Для отображения тенденции изменения популяции необходимо чтобы временной промежуток был задан числами.
                 </div>
                 <div class="alert alert-warning"
                      ng-show="populationForm.populationStart.$valid &&
@@ -115,6 +118,9 @@
                         <span ng-if="population.targetTime < 0">
                             Популяция в {{population.targetFixed | numeric : 'особ' : 'ь' : 'и' : 'ей' }} была
                             {{ -1 * population.targetTime | numeric : '' : 'год' : 'года' : 'лет' }} назад
+                        </span>
+                        <span ng-if="population.targetTime == 0">
+                            Популяция в {{ population.targetFixed | numeric : 'особ' : 'ь' : 'и' : 'ей' }} уже достигнута
                         </span>
                     </div>
                     <div class="row">

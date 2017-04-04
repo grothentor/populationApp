@@ -24,7 +24,10 @@ var path = {
         style: 'css/style.scss'
     },
     watch: { 
-        js: 'app/**/*.js',
+        js: [
+            'app/**/*.js',
+            '!app/**/*test.js'
+        ],
         style: 'css/*.css'
     }
 };
@@ -49,7 +52,7 @@ gulp.task('style:build', function () {
 });
 
 gulp.task('watch', function(){
-    watch([path.watch.js], function(event, cb) {
+    watch(path.watch.js, function(event, cb) {
         gulp.start('js:build');
     });
     watch([path.watch.style], function(event, cb) {

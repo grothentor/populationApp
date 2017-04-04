@@ -43,7 +43,7 @@
                 var start =  this.targetTime > 0 ? 0 : this.targetTime;
                 var end = this.targetTime > 0 ? this.targetTime : 0;
 
-                for (var i = start; i < end; i += step) {
+                for (var i = start; i <= end; i += step) {
                     if (i + step > end) {
                         this.targetData.labels.push(Math.round(end));
                         this.targetData.data[0].push(this.getPopulation(end));
@@ -79,6 +79,9 @@
                     this.calculateRange = checkNumberValidation(this.range.end) &&
                         checkNumberValidation(this.range.start) &&
                         this.range.start < this.range.end;
+                } else {
+                    this.calculatePopulation = false;
+                    this.calculateRange = false;
                 }
             };
 

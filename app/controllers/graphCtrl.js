@@ -48,8 +48,6 @@
             $('html').append('<div class="loader">"');
 
             var $content = $(".result-content > div:not(.ng-hide)");
-            var first = false,
-                second = false;
 
             var uploaded = 0;
             var save = function () {
